@@ -1,11 +1,30 @@
+<!-- Login Page -->
+
 <h1>Login</h1>
-<form method="POST" action="/auth/login">
-  <label>Username:</label>
+
+<!-- Show error message if any -->
+{{#if error}}
+  <p class="error">{{error}}</p>
+{{/if}}
+
+<!-- Login form -->
+<form action="/auth/login" method="POST">
+  <!-- Username field -->
+  <label for="username">Username</label>
   <input type="text" name="username" required>
-  <br>
-  <label>Password:</label>
+
+  <!-- Password field -->
+  <label for="password">Password</label>
   <input type="password" name="password" required>
-  <br>
-  <button type="submit">Login</button>
+
+  <!-- Submit login -->
+  <button type="submit" class="btn">Login</button>
 </form>
-<a href="/auth/register">Don't have an account? Register</a>
+
+<!-- Link to register page if user doesn't have an account yet -->
+<p>Don’t have an account? 
+  <a href="/auth/register" class="btn-link">Register here</a>
+</p>
+
+<!-- Optional GitHub login -->
+<a href="/auth/github" class="btn btn-github">Login with GitHub</a>

@@ -1,24 +1,52 @@
+<!-- Notes Page -->
+
 <h1>My Notes</h1>
 
-<a href="/notes/add">Create New Note</a>
+<!-- Link to add a new note -->
+<a href="/notes/add" class="btn">Create New Note</a>
 
+<!-- Loop through all notes -->
 {{#each notes}}
-  <div style="margin-bottom: 30px;">
+  <div class="note">
+    <!-- Note title -->
     <h3>{{this.title}}</h3>
-    <p>{{this.body}}</p>
-    <small>{{this.formattedDate}}</small><br>
 
-    {{#each this.fileTypes}}
-      {{#if this.isVideo}}
-        <video src="/uploads/{{this.name}}" controls width="300"></video>
+    <!-- Note body -->
+    <p>{{this.body}}</p>
+
+    <!-- Note creation date -->
+    <small>{{this.createdAt}}</small><br>
+
+    <!-- Loop through uploaded files -->
+    {{#each this.files}}
+      <!-- Check if the file is a video -->
+      {{#if (this.includes ".mp4")}}
+        <video width="300" controls>
+          <source src="/uploads/{{this}}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {{else if (this.includes ".mov")}}
+        <video width="300" controls>
+          <source src="/uploads/{{this}}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {{else if (this.includes ".avi")}}
+        <video width="300" controls>
+          <source src="/uploads/{{this}}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
       {{else}}
-        <img src="/uploads/{{this.name}}" width="300">
+        <!-- If not a video, display as image -->
+        <img src="/uploads/{{this}}" width="300">
       {{/if}}
     {{/each}}
 
+    <!-- Form to delete note -->
     <form action="/notes/{{this._id}}/delete" method="POST">
       <button type="submit">Delete</button>
     </form>
-    <a href="/notes/{{this._id}}/edit">Edit</a>
+
+    <!-- Link to edit note -->
+    <a href="/notes/{{this._id}}/edit" class="btn">Edit</a>
   </div>
 {{/each}}

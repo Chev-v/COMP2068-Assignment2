@@ -1,14 +1,17 @@
-<h1>Create New Note</h1>
+<!-- Add New Note header -->
+<h1>Add New Note</h1>
 
-<form method="POST" action="/notes/add" enctype="multipart/form-data">
-  <label>Title:</label><br>
-  <input type="text" name="title" required><br><br>
+<!-- Form to create a new note -->
+<form action="/notes/add" method="POST" enctype="multipart/form-data">
+  <!-- Title input -->
+  <input type="text" name="title" placeholder="Title" required><br>
 
-  <label>Body:</label><br>
-  <textarea name="body" rows="5" required></textarea><br><br>
+  <!-- Body/Content input -->
+  <textarea name="body" placeholder="Note body" required></textarea><br>
 
-  <label>Upload files (images or videos):</label><br>
-  <input type="file" name="files" multiple><br><br>
+  <!-- Upload file input (supports multiple files) -->
+  <input type="file" name="files" multiple><br>
 
-  <button type="submit">Create Note</button>
+  <!-- Submit form button -->
+  <button type="submit">Add Note</button>
 </form>

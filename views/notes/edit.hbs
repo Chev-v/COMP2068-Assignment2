@@ -1,14 +1,17 @@
+<!-- Edit Note header -->
 <h1>Edit Note</h1>
 
-<form method="POST" action="/notes/{{note._id}}/edit" enctype="multipart/form-data">
-  <label>Title:</label><br>
-  <input type="text" name="title" value="{{note.title}}" required><br><br>
+<!-- Form to update the note -->
+<form action="/notes/{{note._id}}/edit" method="POST" enctype="multipart/form-data">
+  <!-- Input field for title with existing value prefilled -->
+  <input type="text" name="title" value="{{note.title}}" required><br>
 
-  <label>Body:</label><br>
-  <textarea name="body" rows="5" required>{{note.body}}</textarea><br><br>
+  <!-- Textarea for body with existing value prefilled -->
+  <textarea name="body" required>{{note.body}}</textarea><br>
 
-  <label>Upload new files (optional):</label><br>
-  <input type="file" name="files" multiple><br><br>
+  <!-- Upload file input (optional additional files) -->
+  <input type="file" name="files" multiple><br>
 
+  <!-- Submit form button -->
   <button type="submit">Update Note</button>
 </form>

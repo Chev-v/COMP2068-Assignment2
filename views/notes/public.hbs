@@ -1,19 +1,25 @@
+<!-- Header for public read-only notes -->
 <h1>Public Notes (Read-Only)</h1>
 
+<!-- Loop through each public note -->
 {{#each notes}}
-  <div style="border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem;">
+  <div>
+    <!-- Display note title and content -->
     <h3>{{this.title}}</h3>
     <p>{{this.body}}</p>
+
+    <!-- Show the creation date -->
     <small>{{this.formattedDate}}</small><br>
 
+    <!-- Loop through uploaded files (videos/images) -->
     {{#each this.fileTypes}}
       {{#if this.isVideo}}
+        <!-- Render video if applicable -->
         <video src="/uploads/{{this.name}}" controls width="300"></video>
       {{else}}
+        <!-- Render image if not a video -->
         <img src="/uploads/{{this.name}}" width="300">
       {{/if}}
     {{/each}}
   </div>
 {{/each}}
-
-<a href="/">Return to Home</a>

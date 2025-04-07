@@ -1,24 +1,19 @@
-<h1>My Notes</h1>
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+  <div class="card shadow-lg p-5 text-center" style="max-width: 700px; width: 100%; background-color: #1f1f1f; color: #f0f0f0;">
+    <h1 class="mb-3" style="font-size: 2.5rem;">📒 Welcome to NoteTaker</h1>
+    <p class="mb-4" style="font-size: 1.1rem;">
+      Your simple and efficient solution to capture, organize, and manage your notes with ease. Whether it's a thought, reminder, or to-do — we got you.
+    </p>
 
-<a href="/notes/add">Create New Note</a>
+    <div class="text-start mb-4" style="line-height: 1.6;">
+      <p>✅ Create and manage your notes</p>
+      <p>📁 Upload images and videos</p>
+      <p>🔒 Secure access with user accounts</p>
+      <p>🚀 Edit and delete whenever needed</p>
+    </div>
 
-{{#each notes}}
-  <div>
-    <h3>{{this.title}}</h3>
-    <p>{{this.body}}</p>
-    <small>{{this.formattedDate}}</small><br>
-
-    {{#each this.fileTypes}}
-      {{#if this.isVideo}}
-        <video src="/uploads/{{this.name}}" controls width="300"></video>
-      {{else}}
-        <img src="/uploads/{{this.name}}" width="300">
-      {{/if}}
-    {{/each}}
-
-    <form action="/notes/{{this._id}}/delete" method="POST">
-      <button type="submit">Delete</button>
-    </form>
-    <a href="/notes/{{this._id}}/edit">Edit</a>
+    <a href="/auth/register" class="btn btn-primary btn-lg mt-3 px-4 py-2" style="font-size: 1.1rem;">
+      Sign Up & Create Notes Now
+    </a>
   </div>
-{{/each}}
+</div>
