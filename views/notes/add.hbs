@@ -1,0 +1,15 @@
+<h1>Add a New Note</h1>
+
+<form action="/notes/add" method="POST">
+  <div>
+    <label for="title">Title</label>
+    <input type="text" name="title" required>
+  </div>
+
+  <div>
+    <label for="body">Note</label>
+    <textarea name="body" rows="5" required></textarea>
+  </div>
+
+  <button type="submit">Save Note</button>
+</form>

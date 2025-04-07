@@ -1,0 +1,18 @@
+<h1>All Notes</h1>
+
+<a href="/notes/add">+ Add New Note</a>
+
+<ul>
+  {{#each notes}}
+    <li>
+      <strong>{{this.title}}</strong><br>
+      {{this.body}}<br>
+      <em>{{formatDate this.createdAt}}</em><br>
+
+      <a href="/notes/{{this._id}}/edit">Edit</a> |
+      <form action="/notes/{{this._id}}/delete" method="POST" style="display:inline">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  {{/each}}
+</ul>
