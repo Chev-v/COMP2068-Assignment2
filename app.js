@@ -33,11 +33,18 @@ hbs.registerHelper('formatDate', function (datetime) {
   return new Intl.DateTimeFormat('en-US', options).format(new Date(datetime)) + ' EST';
 });
 
+hbs.registerHelper('includes', function (str, value) {
+  return typeof str === 'string' && str.includes(value);
+});
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

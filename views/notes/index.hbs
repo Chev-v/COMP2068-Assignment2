@@ -9,6 +9,21 @@
       {{this.body}}<br>
       <em>{{formatDate this.createdAt}}</em><br>
 
+      {{#if this.file.length}}
+        <div>
+          <strong>Attached Files:</strong><br>
+          {{#each this.file}}
+            {{#if (includes this ".mp4")}}
+              <video width="320" controls>
+                <source src="/uploads/{{this}}" type="video/mp4">
+              </video>
+            {{else}}
+              <img src="/uploads/{{this}}" alt="Note Image" width="200">
+            {{/if}}
+          {{/each}}
+        </div>
+      {{/if}}
+
       <a href="/notes/{{this._id}}/edit">Edit</a> |
       <form action="/notes/{{this._id}}/delete" method="POST" style="display:inline">
         <button type="submit">Delete</button>
