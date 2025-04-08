@@ -22,7 +22,7 @@ module.exports = function (passport) {
   passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID, // GitHub client ID from .env
     clientSecret: process.env.GITHUB_CLIENT_SECRET, // GitHub secret from .env
-    callbackURL: '/auth/github/callback' // Redirect URL after GitHub login
+    callbackURL: process.env.GITHUB_CALLBACK || "http://localhost:3000/auth/github/callback" // Dynamic callback URL
   },
     async (accessToken, refreshToken, profile, done) => {
       try {
