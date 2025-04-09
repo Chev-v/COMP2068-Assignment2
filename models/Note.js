@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 
-const noteSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  body: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-  file: [String], // allow multiple files
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+const NoteSchema = new mongoose.Schema({
+  title: String,
+  body: String,
+  files: [String],
+  createdAt: Date
 });
 
-module.exports = mongoose.model('Note', noteSchema);
+module.exports = mongoose.model('Note', NoteSchema);

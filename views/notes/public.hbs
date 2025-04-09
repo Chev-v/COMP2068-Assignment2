@@ -1,0 +1,19 @@
+<h1>Public Notes (Read-Only)</h1>
+
+{{#each notes}}
+  <div style="border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem;">
+    <h3>{{this.title}}</h3>
+    <p>{{this.body}}</p>
+    <small>{{this.formattedDate}}</small><br>
+
+    {{#each this.fileTypes}}
+      {{#if this.isVideo}}
+        <video src="/uploads/{{this.name}}" controls width="300"></video>
+      {{else}}
+        <img src="/uploads/{{this.name}}" width="300">
+      {{/if}}
+    {{/each}}
+  </div>
+{{/each}}
+
+<a href="/">Return to Home</a>

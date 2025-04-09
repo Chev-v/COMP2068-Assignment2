@@ -1,133 +1,104 @@
 const express = require('express');
 const router = express.Router();
-const Note = require('../models/Note');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const Note = require('../models/Note');
 
-// Multer setup
+// Configure multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, './public/uploads');
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+    const uniqueName = Date.now() + '-' + file.originalname;
+    cb(null, uniqueName);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
-// GET all notes
+// GET all notes (authenticated view)
 router.get('/', async (req, res) => {
   try {
     const notes = await Note.find().lean();
-    res.render('notes/index', { notes });
+    const updatedNotes = notes.map(note => {
+      const fileTypes = (note.files || []).map(name => {
+        const ext = name.split('.').pop().toLowerCase();
+        const isVideo = ['mp4', 'mov', 'avi', 'webm'].includes(ext);
+        return { name, isVideo };
+      });
+
+      return {
+        ...note,
+        formattedDate: new Date(note.createdAt).toLocaleString(),
+        fileTypes
+      };
+    });
+
+    res.render('notes/index', { notes: updatedNotes });
   } catch (err) {
-    console.error(err);
-    res.render('error', { message: 'Failed to load notes' });
+    console.error('Failed to get notes:', err);
+    res.status(500).send('Failed to get notes');
   }
 });
 
-// Show add form
+// GET form to add note
 router.get('/add', (req, res) => {
   res.render('notes/add');
 });
 
-// Handle add with multiple files
-router.post('/add', upload.array('files', 10), async (req, res) => {
+// POST add new note
+router.post('/add', upload.array('files', 5), async (req, res) => {
   try {
-    const { title, body } = req.body;
-    const files = req.files ? req.files.map(f => f.filename) : [];
+    const fileNames = req.files.map(file => file.filename);
 
-    await Note.create({ title, body, file: files });
+    const note = new Note({
+      title: req.body.title,
+      body: req.body.body,
+      files: fileNames,
+      createdAt: new Date()
+    });
 
+    await note.save();
     res.redirect('/notes');
   } catch (err) {
-    console.error(err);
-    res.render('error', { message: 'Failed to add note' });
+    console.error('Error creating note:', err);
+    res.status(500).send('Error saving note.');
   }
 });
 
-// Show edit form
+// GET edit note form
 router.get('/:id/edit', async (req, res) => {
   try {
     const note = await Note.findById(req.params.id).lean();
-    if (!note) return res.render('error', { message: 'Note not found' });
+    if (!note) return res.status(404).send('Note not found');
     res.render('notes/edit', { note });
   } catch (err) {
-    console.error(err);
-    res.render('error', { message: 'Failed to load note for editing' });
+    res.status(500).send('Error retrieving note');
   }
 });
 
-// Handle edit and add new files
-router.post('/:id/edit', upload.array('files', 10), async (req, res) => {
+// POST update edited note
+router.post('/:id/edit', async (req, res) => {
   try {
-    const { title, body } = req.body;
-    const note = await Note.findById(req.params.id);
-
-    if (!note) {
-      return res.status(404).render('error', { message: 'Note not found' });
-    }
-
-    const newFiles = req.files ? req.files.map(f => f.filename) : [];
-    note.title = title;
-    note.body = body;
-    note.file = [...(note.file || []), ...newFiles];
-
-    await note.save();
-
+    await Note.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      body: req.body.body
+    });
     res.redirect('/notes');
   } catch (err) {
-    console.error(err);
-    res.render('error', { message: 'Failed to update note' });
+    res.status(500).send('Error updating note');
   }
 });
 
-// Handle note delete
+// POST delete note
 router.post('/:id/delete', async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
-    if (!note) return res.redirect('/notes');
-
-    // Delete all associated files
-    if (Array.isArray(note.file)) {
-      note.file.forEach(file => {
-        const filePath = path.join(__dirname, '../uploads', file);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      });
-    }
-
     await Note.findByIdAndDelete(req.params.id);
     res.redirect('/notes');
   } catch (err) {
-    console.error(err);
-    res.render('error', { message: 'Failed to delete note' });
-  }
-});
-
-// Handle individual file delete
-router.post('/:id/files/delete', async (req, res) => {
-  try {
-    const { fileName } = req.body;
-    const note = await Note.findById(req.params.id);
-
-    if (!note || !fileName) {
-      return res.redirect(`/notes/${req.params.id}/edit`);
-    }
-
-    note.file = note.file.filter(f => f !== fileName);
-    await note.save();
-
-    const filePath = path.join(__dirname, '../uploads', fileName);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
-    res.redirect(`/notes/${note._id}/edit`);
-  } catch (err) {
-    console.error(err);
-    res.render('error', { message: 'Failed to delete file' });
+    console.error('Failed to delete note:', err);
+    res.status(500).send('Error deleting note');
   }
 });
 
 module.exports = router;
+    

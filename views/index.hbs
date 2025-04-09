@@ -1,2 +1,24 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<h1>My Notes</h1>
+
+<a href="/notes/add">Create New Note</a>
+
+{{#each notes}}
+  <div>
+    <h3>{{this.title}}</h3>
+    <p>{{this.body}}</p>
+    <small>{{this.formattedDate}}</small><br>
+
+    {{#each this.fileTypes}}
+      {{#if this.isVideo}}
+        <video src="/uploads/{{this.name}}" controls width="300"></video>
+      {{else}}
+        <img src="/uploads/{{this.name}}" width="300">
+      {{/if}}
+    {{/each}}
+
+    <form action="/notes/{{this._id}}/delete" method="POST">
+      <button type="submit">Delete</button>
+    </form>
+    <a href="/notes/{{this._id}}/edit">Edit</a>
+  </div>
+{{/each}}

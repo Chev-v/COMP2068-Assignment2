@@ -1,42 +1,14 @@
 <h1>Edit Note</h1>
 
-<form action="/notes/{{note._id}}/edit" method="POST" enctype="multipart/form-data">
-  <div>
-    <label for="title">Title</label>
-    <input type="text" name="title" value="{{note.title}}" required>
-  </div>
+<form method="POST" action="/notes/{{note._id}}/edit" enctype="multipart/form-data">
+  <label>Title:</label><br>
+  <input type="text" name="title" value="{{note.title}}" required><br><br>
 
-  <div>
-    <label for="body">Note</label>
-    <textarea name="body" rows="5" required>{{note.body}}</textarea>
-  </div>
+  <label>Body:</label><br>
+  <textarea name="body" rows="5" required>{{note.body}}</textarea><br><br>
 
-  <div>
-    <label for="files">Add More Files</label>
-    <input type="file" name="files" multiple>
-  </div>
+  <label>Upload new files (optional):</label><br>
+  <input type="file" name="files" multiple><br><br>
 
   <button type="submit">Update Note</button>
 </form>
-
-{{#if note.file.length}}
-  <div style="margin-top: 2rem;">
-    <strong>Existing Files:</strong><br>
-    {{#each note.file}}
-      <div style="margin-bottom: 1rem;">
-        {{#if (includes this ".mp4")}}
-          <video width="320" controls>
-            <source src="/uploads/{{this}}" type="video/mp4">
-          </video>
-        {{else}}
-          <img src="/uploads/{{this}}" alt="Note Image" width="200">
-        {{/if}}
-
-        <form action="/notes/{{../note._id}}/files/delete" method="POST" style="display:inline;">
-          <input type="hidden" name="fileName" value="{{this}}">
-          <button type="submit">Delete File</button>
-        </form>
-      </div>
-    {{/each}}
-  </div>
-{{/if}}
